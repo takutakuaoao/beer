@@ -1,0 +1,20 @@
+{
+  "name": "Beer",
+  "workspaceFolder": "/app",
+  "dockerComposeFile": "../docker/docker-compose.yml",
+  "service": "go",
+  "customizations": {
+    "vscode": {
+      "settings": {},
+
+      "extensions": [
+        "wmaurer.vscode-jumpy",
+        "intellsmi.comment-translate",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "golang.go",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}
