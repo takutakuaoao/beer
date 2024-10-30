@@ -34,13 +34,6 @@ func Test_to_show_properties_of_struct(t *testing.T) {
 			item:   HasProperty{},
 			expect: "(struct) HasProperty {\n\tPublicProperty (string) \"\"\n}",
 		},
-		{
-			name: "with multiple properties",
-			item: HasMultipleProperties{
-				PublicProperty2: 4,
-			},
-			expect: "(struct) HasMultipleProperties {\n\tPublicProperty1 (string) \"\"\n\tPublicProperty2 (uint8) 4\n}",
-		},
 	}
 
 	for _, tt := range cases {
@@ -56,6 +49,32 @@ func Test_to_show_properties_of_struct(t *testing.T) {
 	}
 }
 
+func Test_to_show_multiple_properties_of_struct(t *testing.T) {
+	object := HasMultipleProperties{
+		PublicProperty1: "test",
+		PublicProperty2: 1,
+		PublicProperty3: true,
+		PublicProperty4: -1,
+		PublicProperty5: 10,
+	}
+
+	sut := Printer{
+		item: object,
+	}
+
+	result := sut.Write()
+
+	expect := `(struct) HasMultipleProperties {
+	PublicProperty1 (string) "test"
+	PublicProperty2 (uint8) 1
+	PublicProperty3 (bool) true
+	PublicProperty4 (int) -1
+	PublicProperty5 (uint8) 10
+}`
+
+	assert.Equal(t, expect, result)
+}
+
 type Empty struct {
 }
 
@@ -66,4 +85,7 @@ type HasProperty struct {
 type HasMultipleProperties struct {
 	PublicProperty1 string
 	PublicProperty2 uint8
+	PublicProperty3 bool
+	PublicProperty4 int
+	PublicProperty5 byte
 }
