@@ -56,6 +56,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 		PublicProperty3: true,
 		PublicProperty4: -1,
 		PublicProperty5: 10,
+		PublicProperty6: []string{"test", "test2"},
 	}
 
 	sut := Printer{
@@ -70,6 +71,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 	PublicProperty3 (bool) true
 	PublicProperty4 (int) -1
 	PublicProperty5 (uint8) 10
+	PublicProperty6 (string[]) ["test", "test2"]
 }`
 
 	assert.Equal(t, expect, result)
@@ -88,4 +90,5 @@ type HasMultipleProperties struct {
 	PublicProperty3 bool
 	PublicProperty4 int
 	PublicProperty5 byte
+	PublicProperty6 []string
 }
