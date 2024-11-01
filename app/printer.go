@@ -51,38 +51,73 @@ func (s *Struct) getType() string {
 }
 
 func (s *Struct) WriteProperties(content Content) Content {
-	s.loopProperties(func(name string, value reflect.Value, propertyType string) {
+	s.loopProperties(func(name string, propertyType *PropertyType, propertyValue *PropertyValue) {
 		content = content.Indent().Merge(
-			s.propertyText(name, value, propertyType),
+			s.propertyText(name, propertyType, propertyValue),
 		)
 	})
 
 	return content.LineBreak()
 }
 
-func (s *Struct) loopProperties(callBack func(name string, value reflect.Value, propertyType string)) {
+func (s *Struct) loopProperties(callBack func(name string, propertyType *PropertyType, propertyValue *PropertyValue)) {
 	for i := 0; i < s.reflectType.NumField(); i++ {
 		field := s.reflectType.Field(i)
-		typeName := field.Type.Name()
 
-		if field.Type.Kind().String() == "slice" {
-			typeName = fmt.Sprintf("%v[]", field.Type.Elem())
-		}
-
-		callBack(field.Name, s.reflectValue.FieldByName(field.Name), typeName)
+		callBack(
+			field.Name,
+			NewPropertyType(field.Type),
+			NewPropertyValue(s.reflectValue.FieldByName(field.Name)),
+		)
 	}
 }
 
-func (s *Struct) propertyText(name string, value reflect.Value, propertyType string) string {
-	valueText := ""
+func (s *Struct) propertyText(name string, propertyType *PropertyType, propertyValue *PropertyValue) string {
+	return fmt.Sprintf("%v (%v) %v", name, propertyType, propertyValue.GetAsText(propertyType))
+}
 
-	if propertyType == "string" {
-		valueText = fmt.Sprintf("\"%v\"", value)
-	} else {
-		valueText = fmt.Sprintf("%v", value)
+type PropertyType struct {
+	self reflect.Type
+}
+
+func NewPropertyType(value reflect.Type) *PropertyType {
+	return &PropertyType{
+		self: value,
+	}
+}
+
+func (t *PropertyType) IsString() bool {
+	return t.self.Kind() == reflect.String
+}
+
+func (t *PropertyType) String() string {
+	return t.getTypeName()
+}
+
+func (t *PropertyType) getTypeName() string {
+	if t.self.Kind() == reflect.Slice {
+		return fmt.Sprintf("%v[]", t.self.Elem())
 	}
 
-	return fmt.Sprintf("%v (%v) %v", name, propertyType, valueText)
+	return t.self.Name()
+}
+
+type PropertyValue struct {
+	value reflect.Value
+}
+
+func NewPropertyValue(value reflect.Value) *PropertyValue {
+	return &PropertyValue{
+		value: value,
+	}
+}
+
+func (v *PropertyValue) GetAsText(propertyType *PropertyType) string {
+	if propertyType.IsString() {
+		return fmt.Sprintf("\"%v\"", v.value)
+	}
+
+	return fmt.Sprintf("%v", v.value)
 }
 
 func NewContent(content string) *Content {
