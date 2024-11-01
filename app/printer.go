@@ -9,7 +9,7 @@ type Printer struct {
 	item interface{}
 }
 
-func (p *Printer) Write() string {
+func (p *Printer) Write() Content {
 	object := NewStruct(reflect.TypeOf(p.item), reflect.ValueOf(p.item))
 	content := *NewContent("")
 
@@ -17,7 +17,7 @@ func (p *Printer) Write() string {
 		content = object.WriteProperties(content)
 	}
 
-	return object.WriteStruct(content).content
+	return object.WriteStruct(content)
 }
 
 func NewStruct(reflectType reflect.Type, reflectValue reflect.Value) *Struct {
@@ -152,4 +152,8 @@ func (c Content) Surround(pre string, last string) Content {
 
 func (c Content) AddHead(text string) Content {
 	return *NewContent(fmt.Sprintf("%v%v", text, c.content))
+}
+
+func (c Content) Equal(other Content) bool {
+	return c.content == other.content
 }

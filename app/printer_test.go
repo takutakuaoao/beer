@@ -13,7 +13,7 @@ func Test_to_show_empty_struct(t *testing.T) {
 
 	result := sut.Write()
 
-	assert.Equal(t, "(struct) Empty {}", result)
+	assert.True(t, result.Equal(*NewContent("(struct) Empty {}")))
 }
 
 func Test_to_show_properties_of_struct(t *testing.T) {
@@ -44,7 +44,7 @@ func Test_to_show_properties_of_struct(t *testing.T) {
 
 			result := sut.Write()
 
-			assert.Equal(t, tt.expect, result)
+			assert.True(t, result.Equal(*NewContent(tt.expect)))
 		})
 	}
 }
@@ -74,7 +74,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 	PublicProperty6 (string[]) [test test2]
 }`
 
-	assert.Equal(t, expect, result)
+	assert.True(t, result.Equal(*NewContent(expect)))
 }
 
 type Empty struct {
