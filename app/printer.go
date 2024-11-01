@@ -63,8 +63,13 @@ func (s *Struct) WriteProperties(content Content) Content {
 func (s *Struct) loopProperties(callBack func(name string, value reflect.Value, propertyType string)) {
 	for i := 0; i < s.reflectType.NumField(); i++ {
 		field := s.reflectType.Field(i)
+		typeName := field.Type.Name()
 
-		callBack(field.Name, s.reflectValue.FieldByName(field.Name), field.Type.Name())
+		if field.Type.Kind().String() == "slice" {
+			typeName = fmt.Sprintf("%v[]", field.Type.Elem())
+		}
+
+		callBack(field.Name, s.reflectValue.FieldByName(field.Name), typeName)
 	}
 }
 

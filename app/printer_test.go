@@ -71,7 +71,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 	PublicProperty3 (bool) true
 	PublicProperty4 (int) -1
 	PublicProperty5 (uint8) 10
-	PublicProperty6 (string[]) ["test", "test2"]
+	PublicProperty6 (string[]) [test test2]
 }`
 
 	assert.Equal(t, expect, result)
