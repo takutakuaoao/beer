@@ -77,6 +77,28 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 	assert.True(t, result.Equal(*NewContent(expect)))
 }
 
+func Test_to_show_func_property_of_struct(t *testing.T) {
+	type HasFuncProperty struct {
+		Property1 func()
+	}
+
+	s := HasFuncProperty{
+		Property1: func() {},
+	}
+
+	sut := Printer{
+		item: s,
+	}
+
+	result := sut.Write()
+
+	expect := `(struct) HasFuncProperty {
+	Property1 (func) func() -> void
+}`
+
+	assert.True(t, result.Equal(*NewContent(expect)))
+}
+
 type Empty struct {
 }
 
