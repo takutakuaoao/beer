@@ -33,6 +33,11 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			f:        func(_ map[int]SampleStruct) {},
 			expected: "Property (func) func(map[int]SampleStruct) -> void",
 		},
+		{
+			name:     "one arg with struct",
+			f:        func(_ SampleStruct) {},
+			expected: "Property (func) func(SampleStruct) -> void",
+		},
 	}
 
 	for _, tt := range cases {
