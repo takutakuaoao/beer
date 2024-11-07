@@ -57,6 +57,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 		PublicProperty4: -1,
 		PublicProperty5: 10,
 		PublicProperty6: []string{"test", "test2"},
+		PublicProperty7: func(a map[string]HasProperty) {},
 	}
 
 	sut := Printer{
@@ -72,6 +73,7 @@ func Test_to_show_multiple_properties_of_struct(t *testing.T) {
 	PublicProperty4 (int) -1
 	PublicProperty5 (uint8) 10
 	PublicProperty6 (string[]) [test test2]
+	PublicProperty7 (func) func(map[string]HasProperty) -> void
 }`
 
 	assert.True(t, result.Equal(*NewContent(expect)))
@@ -113,4 +115,5 @@ type HasMultipleProperties struct {
 	PublicProperty4 int
 	PublicProperty5 byte
 	PublicProperty6 []string
+	PublicProperty7 func(a map[string]HasProperty)
 }
