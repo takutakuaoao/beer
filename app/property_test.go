@@ -7,6 +7,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_to_get_text_of_the_Func_property(t *testing.T) {
+	cases := []struct {
+		name     string
+		f        interface{}
+		expected string
+	}{
+		{
+			name:     "one arg",
+			f:        func(_ string) {},
+			expected: "Property (func) func(string) -> void",
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			sut := NewFuncProperty("Property", reflect.TypeOf(tt.f))
+
+			assert.Equal(t, tt.expected, sut.GetText())
+		})
+	}
+}
+
 // This is the Learning Test.
 func Test_to_make_the_reflection_type_from_func_variable(t *testing.T) {
 	f := func(test string) string {

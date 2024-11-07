@@ -15,7 +15,7 @@ func NewProperty(name string, value reflect.Value, kind reflect.Type) Property {
 	}
 
 	if kind.Kind() == reflect.Func {
-		return NewFuncProperty(name)
+		return NewFuncProperty(name, kind)
 	}
 
 	return NewSimplyProperty(name, kind, value)
@@ -23,16 +23,24 @@ func NewProperty(name string, value reflect.Value, kind reflect.Type) Property {
 
 type FuncProperty struct {
 	name string
+	kind reflect.Type
 }
 
-func NewFuncProperty(name string) FuncProperty {
+func NewFuncProperty(name string, kind reflect.Type) FuncProperty {
 	return FuncProperty{
 		name: name,
+		kind: kind,
 	}
 }
 
 func (p FuncProperty) GetText() string {
-	return formatProperty(p.name, "func", "func() -> void")
+	fv := ""
+
+	if p.kind.NumIn() > 0 {
+		fv = p.kind.In(0).Name()
+	}
+
+	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", fv))
 }
 
 type SliceProperty struct {
