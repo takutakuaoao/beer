@@ -29,14 +29,14 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			expected: "Property (func) func(map[string]uint8) -> void",
 		},
 		{
-			name:     "one arg with the objects map",
-			f:        func(_ map[int]SampleStruct) {},
-			expected: "Property (func) func(map[int]SampleStruct) -> void",
-		},
-		{
 			name:     "one arg with struct",
 			f:        func(_ SampleStruct) {},
 			expected: "Property (func) func(SampleStruct) -> void",
+		},
+		{
+			name:     "multiple args",
+			f:        func(_ map[string]SampleStruct, _ []SampleStruct) {},
+			expected: "Property (func) func(map[string]SampleStruct, SampleStruct[]) -> void",
 		},
 	}
 

@@ -37,7 +37,7 @@ func (p FuncProperty) GetText() string {
 	funcArgType := ""
 
 	if p.hasArg() {
-		funcArgType = p.getArgType(0)
+		funcArgType = p.getAllArgTypes()
 	}
 
 	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", funcArgType))
@@ -45,6 +45,20 @@ func (p FuncProperty) GetText() string {
 
 func (p *FuncProperty) hasArg() bool {
 	return p.kind.NumIn() > 0
+}
+
+func (p *FuncProperty) getAllArgTypes() string {
+	funcArgType := ""
+
+	for i := 0; i < p.kind.NumIn(); i++ {
+		if i == 0 {
+			funcArgType = p.getArgType(i)
+		} else {
+			funcArgType = fmt.Sprintf("%s, %s", funcArgType, p.getArgType(i))
+		}
+	}
+
+	return funcArgType
 }
 
 func (p *FuncProperty) getArgType(index int) string {
@@ -117,8 +131,8 @@ func formatProperty(name string, kind string, value string) string {
 	return fmt.Sprintf("%s (%s) %s", name, kind, value)
 }
 
-func formatSliceTypeText(slice reflect.Type) string {
-	return fmt.Sprintf("%s[]", slice)
+func formatSliceTypeText(sliceType reflect.Type) string {
+	return fmt.Sprintf("%s[]", sliceType.Name())
 }
 
 func formatMapTypeText(keyType reflect.Type, valueType string) string {
