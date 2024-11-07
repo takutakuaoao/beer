@@ -23,6 +23,16 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			f:        func(_ []string) {},
 			expected: "Property (func) func(string[]) -> void",
 		},
+		{
+			name:     "one arg with map",
+			f:        func(_ map[string]uint8) {},
+			expected: "Property (func) func(map[string]uint8) -> void",
+		},
+		{
+			name:     "one arg with the objects map",
+			f:        func(_ map[int]SampleStruct) {},
+			expected: "Property (func) func(map[int]SampleStruct) -> void",
+		},
 	}
 
 	for _, tt := range cases {
@@ -56,4 +66,8 @@ func Test_to_make_the_reflection_type_from_func_variable(t *testing.T) {
 
 	// get return type
 	assert.Equal(t, "string", tf.Out(0).String())
+}
+
+type SampleStruct struct {
+	Property string
 }

@@ -34,19 +34,39 @@ func NewFuncProperty(name string, kind reflect.Type) FuncProperty {
 }
 
 func (p FuncProperty) GetText() string {
-	fv := ""
+	funcArgType := ""
 
-	if p.kind.NumIn() > 0 {
-		arg := p.kind.In(0)
-
-		if arg.Kind() == reflect.Slice {
-			fv = formatSliceTypeText(arg.Elem())
-		} else {
-			fv = arg.Name()
-		}
+	if p.hasArg() {
+		funcArgType = p.getArgType(0)
 	}
 
-	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", fv))
+	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", funcArgType))
+}
+
+func (p *FuncProperty) hasArg() bool {
+	return p.kind.NumIn() > 0
+}
+
+func (p *FuncProperty) getArgType(index int) string {
+	arg := p.kind.In(index)
+
+	if isSliceType(arg) {
+		return formatSliceTypeText(arg.Elem())
+	}
+
+	if isMapType(arg) {
+		return formatMapTypeText(arg.Key(), arg.Elem().Name())
+	}
+
+	return arg.Name()
+}
+
+func isSliceType(t reflect.Type) bool {
+	return t.Kind() == reflect.Slice
+}
+
+func isMapType(t reflect.Type) bool {
+	return t.Kind() == reflect.Map
 }
 
 type SliceProperty struct {
@@ -99,4 +119,8 @@ func formatProperty(name string, kind string, value string) string {
 
 func formatSliceTypeText(slice reflect.Type) string {
 	return fmt.Sprintf("%s[]", slice)
+}
+
+func formatMapTypeText(keyType reflect.Type, valueType string) string {
+	return fmt.Sprintf("map[%s]%s", keyType, valueType)
 }
