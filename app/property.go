@@ -37,7 +37,13 @@ func (p FuncProperty) GetText() string {
 	fv := ""
 
 	if p.kind.NumIn() > 0 {
-		fv = p.kind.In(0).Name()
+		arg := p.kind.In(0)
+
+		if arg.Kind() == reflect.Slice {
+			fv = formatSliceTypeText(arg.Elem())
+		} else {
+			fv = arg.Name()
+		}
 	}
 
 	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", fv))
@@ -58,7 +64,7 @@ func NewSliceProperty(name string, kind reflect.Type, value reflect.Value) Slice
 }
 
 func (p SliceProperty) GetText() string {
-	return formatProperty(p.name, fmt.Sprintf("%v[]", p.kind.Elem()), fmt.Sprintf("%v", p.value))
+	return formatProperty(p.name, formatSliceTypeText(p.kind.Elem()), fmt.Sprintf("%v", p.value))
 }
 
 type SimplyProperty struct {
@@ -89,4 +95,8 @@ func (p SimplyProperty) GetText() string {
 
 func formatProperty(name string, kind string, value string) string {
 	return fmt.Sprintf("%s (%s) %s", name, kind, value)
+}
+
+func formatSliceTypeText(slice reflect.Type) string {
+	return fmt.Sprintf("%s[]", slice)
 }

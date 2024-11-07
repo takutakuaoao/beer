@@ -18,6 +18,11 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			f:        func(_ string) {},
 			expected: "Property (func) func(string) -> void",
 		},
+		{
+			name:     "one arg with slice",
+			f:        func(_ []string) {},
+			expected: "Property (func) func(string[]) -> void",
+		},
 	}
 
 	for _, tt := range cases {
