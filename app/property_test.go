@@ -43,6 +43,21 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			f:        func() string { return "" },
 			expected: "Property (func) func() -> string",
 		},
+		{
+			name:     "return one value with map",
+			f:        func() map[string]SampleStruct { return map[string]SampleStruct{} },
+			expected: "Property (func) func() -> map[string]SampleStruct",
+		},
+		{
+			name:     "return one value with Struct",
+			f:        func() SampleStruct { return SampleStruct{} },
+			expected: "Property (func) func() -> SampleStruct",
+		},
+		{
+			name:     "return one value with slice",
+			f:        func() []SampleStruct { return []SampleStruct{} },
+			expected: "Property (func) func() -> SampleStruct[]",
+		},
 	}
 
 	for _, tt := range cases {

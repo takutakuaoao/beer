@@ -42,7 +42,7 @@ func (p FuncProperty) GetText() string {
 	}
 
 	if p.kind.NumOut() > 0 {
-		returnType = p.kind.Out(0).Name()
+		returnType = getTypeText(p.kind.Out(0))
 	}
 
 	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> %s", funcArgType, returnType))
@@ -56,28 +56,28 @@ func (p *FuncProperty) getAllArgTypes() string {
 	funcArgType := ""
 
 	for i := 0; i < p.kind.NumIn(); i++ {
+		typeText := getTypeText(p.kind.In(i))
+
 		if i == 0 {
-			funcArgType = p.getArgType(i)
+			funcArgType = typeText
 		} else {
-			funcArgType = fmt.Sprintf("%s, %s", funcArgType, p.getArgType(i))
+			funcArgType = fmt.Sprintf("%s, %s", funcArgType, typeText)
 		}
 	}
 
 	return funcArgType
 }
 
-func (p *FuncProperty) getArgType(index int) string {
-	arg := p.kind.In(index)
-
-	if isSliceType(arg) {
-		return formatSliceTypeText(arg.Elem())
+func getTypeText(t reflect.Type) string {
+	if isSliceType(t) {
+		return formatSliceTypeText(t.Elem())
 	}
 
-	if isMapType(arg) {
-		return formatMapTypeText(arg.Key(), arg.Elem().Name())
+	if isMapType(t) {
+		return formatMapTypeText(t.Key(), t.Elem().Name())
 	}
 
-	return arg.Name()
+	return t.Name()
 }
 
 func isSliceType(t reflect.Type) bool {
