@@ -54,19 +54,13 @@ func (p *FuncProperty) hasArg() bool {
 }
 
 func (p *FuncProperty) getAllArgTypes() string {
-	funcArgType := ""
+	typeTexts := []string{}
 
 	for i := 0; i < p.kind.NumIn(); i++ {
-		typeText := getTypeText(p.kind.In(i))
-
-		if i == 0 {
-			funcArgType = typeText
-		} else {
-			funcArgType = fmt.Sprintf("%s, %s", funcArgType, typeText)
-		}
+		typeTexts = append(typeTexts, getTypeText(p.kind.In(i)))
 	}
 
-	return funcArgType
+	return strings.Join(typeTexts, ", ")
 }
 
 func (p *FuncProperty) hasReturnType() bool {
