@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type Property interface {
@@ -41,8 +42,8 @@ func (p FuncProperty) GetText() string {
 		funcArgType = p.getAllArgTypes()
 	}
 
-	if p.kind.NumOut() > 0 {
-		returnType = getTypeText(p.kind.Out(0))
+	if p.hasReturnType() {
+		returnType = p.getAllReturnTypes()
 	}
 
 	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> %s", funcArgType, returnType))
@@ -66,6 +67,26 @@ func (p *FuncProperty) getAllArgTypes() string {
 	}
 
 	return funcArgType
+}
+
+func (p *FuncProperty) hasReturnType() bool {
+	return p.kind.NumOut() > 0
+}
+
+func (p *FuncProperty) getAllReturnTypes() string {
+	typeTexts := []string{}
+
+	for i := 0; i < p.kind.NumOut(); i++ {
+		typeTexts = append(typeTexts, getTypeText(p.kind.Out(i)))
+	}
+
+	typeText := strings.Join(typeTexts, ", ")
+
+	if len(typeTexts) == 1 {
+		return typeText
+	}
+
+	return fmt.Sprintf("(%s)", typeText)
 }
 
 func getTypeText(t reflect.Type) string {

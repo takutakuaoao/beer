@@ -58,6 +58,11 @@ func Test_to_get_text_of_the_Func_property(t *testing.T) {
 			f:        func() []SampleStruct { return []SampleStruct{} },
 			expected: "Property (func) func() -> SampleStruct[]",
 		},
+		{
+			name:     "return multiple types",
+			f:        func() (string, error) { return "", nil },
+			expected: "Property (func) func() -> (string, error)",
+		},
 	}
 
 	for _, tt := range cases {
