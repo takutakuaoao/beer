@@ -35,12 +35,17 @@ func NewFuncProperty(name string, kind reflect.Type) FuncProperty {
 
 func (p FuncProperty) GetText() string {
 	funcArgType := ""
+	returnType := "void"
 
 	if p.hasArg() {
 		funcArgType = p.getAllArgTypes()
 	}
 
-	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> void", funcArgType))
+	if p.kind.NumOut() > 0 {
+		returnType = p.kind.Out(0).Name()
+	}
+
+	return formatProperty(p.name, "func", fmt.Sprintf("func(%s) -> %s", funcArgType, returnType))
 }
 
 func (p *FuncProperty) hasArg() bool {
